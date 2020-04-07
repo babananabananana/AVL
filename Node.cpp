@@ -1,21 +1,28 @@
-//
-// Created by Ethan Low on 4/7/20.
-//
-
 #include "Node.h"
+#include <iostream>
+
+
+
+Node::Node(int newData) {
+    data = newData;
+    left = nullptr;
+    right = nullptr;
+}
 
 int Node::getData() const {
-    return 0;
+    return data;
 }
 
-NodeInterface *Node::getLeftChild() const {
-    return nullptr;
+Node *Node::getLeftChild() const {
+
+    return left;
 }
 
-NodeInterface *Node::getRightChild() const {
-    return nullptr;
+Node *Node::getRightChild() const {
+    return right;
 }
 
 int Node::getHeight() {
-    return 0;
+    return height;
 }
+

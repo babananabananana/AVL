@@ -10,9 +10,16 @@ private:
     Node *right;
     Node *left;
     int data;
+    int height;
 
 
 public:
+    Node();
+    Node(int newData);
+    ~Node();
+
+
+
     /*
 * Returns the data stored in this node
 *
@@ -25,14 +32,17 @@ public:
     *
     * @return the left child of this node or null if empty left child.
     */
-    NodeInterface * getLeftChild() const;
+    Node* getLeftChild() const;
 
     /*
     * Returns the right child of this node or null if empty right child.
     *
     * @return the right child of this node or null if empty right child.
     */
-    NodeInterface * getRightChild() const;
+    Node* getRightChild() const;
+
+
+
 
     /*
     * Returns the height of this node. The height is the number of nodes
