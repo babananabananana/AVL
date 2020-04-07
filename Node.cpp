@@ -1,7 +1,12 @@
 #include "Node.h"
 #include <iostream>
 
-
+Node::Node(void) {
+    data = 0;
+    left = nullptr;
+    right = nullptr;
+    height = 0;
+}
 
 Node::Node(int newData) {
     data = newData;
