@@ -8,6 +8,16 @@ class Node {
 private:
 
     Node *right;
+public:
+    void setRight(Node *right);
+
+    void setLeft(Node *left);
+
+    void setData(int data);
+
+    void setHeight(int height);
+
+private:
     Node *left;
     int data;
     int height;
@@ -17,8 +27,6 @@ public:
     Node();
     Node(int newData);
     ~Node();
-
-
 
     /*
 * Returns the data stored in this node
@@ -40,8 +48,6 @@ public:
     * @return the right child of this node or null if empty right child.
     */
     Node* getRightChild() const;
-
-
 
 
     /*
