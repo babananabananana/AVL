@@ -6,7 +6,7 @@
 #define AVL_AVL_H
 
 #include "AVLInterface.h"
-
+#include "Node.h"
 class AVL {
 
 public:
@@ -29,6 +29,7 @@ public:
     */
     bool add(int data);
 
+	bool AVL::add_wrapped(Node* cur, int data);
     /*
     * Attempts to remove the given int from the AVL tree
     * Rebalances the tree if data is successfully removed
@@ -38,11 +39,22 @@ public:
     */
     bool remove(int data);
 
+	bool AVL::remove_wrapped(Node* newRoot, int toRemove);
     /*
     * Removes all nodes from the tree, resulting in an empty tree.
     */
     void clear();
 
+	void AVL::clear_wrapped(Node* cur);
+
+	Node* AVLrightRotate(Node* y);
+	Node* AVLleftRotate(Node* x);
+	int getBalance(BSTNode* N);
+	Node* insert(Node node, int key);
+	void replace_parent(Node*& old_root, Node*& local_root);
+
+private:
+	Node* local_root;
 };
 
 
