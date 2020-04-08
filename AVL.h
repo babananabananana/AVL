@@ -55,6 +55,7 @@ public:
 
 private:
 	Node* local_root;
+
 };
 
 

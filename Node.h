@@ -1,29 +1,19 @@
+#pragma once
 #ifndef AVL_NODE_H
 #define AVL_NODE_H
 
 #include "NodeInterface.h"
 #include <iostream>
 
-class Node {
-private:
-
-    Node *right;
-public:
-    void setRight(Node *right);
-
-    void setLeft(Node *left);
-
-    void setData(int data);
-
-    void setHeight(int height);
-
+class Node : public NodeInterface{
 private:
     Node *left;
     int data;
     int height;
-
+    Node *right;
 
 public:
+
     Node();
     Node(int newData);
     ~Node();
@@ -33,22 +23,21 @@ public:
 *
 * @return the data stored in this node.
 */
-    int getData() const;
+    int getData() const override;
 
     /*
     * Returns the left child of this node or null if empty left child.
     *
     * @return the left child of this node or null if empty left child.
     */
-    Node* getLeftChild() const;
+    Node* getLeftChild() const override;
 
     /*
     * Returns the right child of this node or null if empty right child.
     *
     * @return the right child of this node or null if empty right child.
     */
-    Node* getRightChild() const;
-
+    Node* getRightChild() const override;
 
     /*
     * Returns the height of this node. The height is the number of nodes
@@ -60,9 +49,15 @@ public:
     *
     * @return the height of this tree with this node as the local root.
     */
-    int getHeight();
+    int getHeight() override;
 
+    void setRight(Node *right);
 
+    void setLeft(Node *left);
+
+    void setData(int data);
+
+    void setHeight(int height);
 
 
 };

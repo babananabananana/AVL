@@ -16,6 +16,10 @@ Node::Node(int newData) {
     right = nullptr;
 }
 
+Node::~Node(){
+
+}
+
 int Node::getData() const {
     return data;
 }

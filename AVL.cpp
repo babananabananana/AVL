@@ -5,7 +5,7 @@
 #include "AVL.h"
 
 NodeInterface *AVL::getRootNode() const {
-    return nullptr;
+    return local_root;
 }
 
 bool AVL::add(int data) { // Add copied from BST lab :)
