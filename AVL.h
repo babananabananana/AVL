@@ -39,7 +39,7 @@ public:
     */
     bool remove(int data);
 
-	bool remove_wrapped(Node* &newRoot, int toRemove);
+	Node* findParentNode(Node* curr, int toRemove);
     /*
     * Removes all nodes from the tree, resulting in an empty tree.
     */
@@ -55,6 +55,7 @@ public:
 
 private:
 	Node* local_root;
+	//Node* root;
 
 };
 
