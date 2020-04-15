@@ -55,8 +55,9 @@ public:
 
 private:
 	Node* local_root;
-
     Node *maxValueNode(Node *cur);
+    bool delBool;
+    bool addBool;
 };
 
 
