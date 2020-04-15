@@ -1,8 +1,6 @@
-//
-// Created by Ethan Low on 4/7/20.
-//
-
 #include "AVL.h"
+
+
 
 NodeInterface *AVL::getRootNode() const {
     return local_root;
@@ -16,9 +14,10 @@ bool AVL::add(int data) { // Add copied from BST lab :)
         local_root = new Node(data);
         return true;
     }
+    addBool = true;
     Node* cur = local_root;
     local_root = add_wrapped(cur, data);
-    return true;
+    return addBool;
 }
 
 Node* AVL::add_wrapped(Node* node, int data) {
@@ -34,6 +33,7 @@ Node* AVL::add_wrapped(Node* node, int data) {
         node->setHeight(max(1 + node->getRightChild()->getHeight(), node->getHeight()));
     }
     else { // data == node->getData()
+        addBool = false;
         return node;
     }
 
@@ -66,15 +66,16 @@ bool AVL::remove(int data) {
         return false;
     }
     Node* toRemove = local_root;
+    delBool = true;
     local_root = remove_wrapped(toRemove, data);
-    return true;
+    return delBool;
 }
-
 
 //update depth
 //        node->depth = 1 + max(depth(node->left), depth(node->right));
 Node* AVL::remove_wrapped(Node* node, int data) {
     if (node == nullptr) {
+        delBool = false;
         return nullptr;
     }
     else if (data < node -> getData()){
@@ -172,10 +173,6 @@ void AVL::clear_wrapped(Node* cur) {
 return;
 }
 
-
-//int AVL::getHeight() {
-//
-//}
 
 Node* AVL::AVLrightRotate(Node* y) {
     Node *x = y->getLeftChild();
