@@ -39,7 +39,7 @@ public:
     */
     bool remove(int data);
 
-	bool remove_wrapped(Node* &toRemoveNode, int toRemoveData);
+	Node* remove_wrapped(Node* toRemoveNode, int toRemoveData);
     /*
     * Removes all nodes from the tree, resulting in an empty tree.
     */
@@ -55,6 +55,8 @@ public:
 
 private:
 	Node* local_root;
+
+    Node *maxValueNode(Node *cur);
 };
 
 

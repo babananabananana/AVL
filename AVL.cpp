@@ -65,39 +65,81 @@ bool AVL::remove(int data) {
 	if (local_root == nullptr) {
 		return false;
 	}
-	else {
-        Node* toRemove = local_root;
-		return remove_wrapped(toRemove, data);
-	}
+    Node* toRemove = local_root;
+    local_root = remove_wrapped(toRemove, data);
+    return true;
 }
 
-bool AVL::remove_wrapped(Node* &toRemoveNode, int toRemoveData) {
-    if (toRemoveNode == nullptr) {
-		return false;
+
+//update depth
+//        node->depth = 1 + max(depth(node->left), depth(node->right));
+Node* AVL::remove_wrapped(Node* node, int data) {
+    if (node == nullptr) {
+		return nullptr;
 	}
-	else {
-		if (toRemoveData < toRemoveNode->getData()) {
-            toRemoveNode = toRemoveNode->getLeftChild();
-			return remove_wrapped(toRemoveNode, toRemoveData);
-		}
-		else if (toRemoveData > toRemoveNode->getData()) {
-            toRemoveNode = toRemoveNode->getRightChild();
-			return remove_wrapped(toRemoveNode, toRemoveData);
-		}
-		else { // If toRemove is found
-			Node* removeNodeCopy = toRemoveNode;
-			if (toRemoveNode->getLeftChild() == nullptr) {
-                toRemoveNode = toRemoveNode->getLeftChild();
-			}
-			else {
-			    Node* replacee = removeNodeCopy->getLeftChild();
-				replace_parent(removeNodeCopy, replacee);
-			}
-//			delete removeNodeCopy;
-			return true;
-		}
-	}
-return false;
+    else if (data < node -> getData()){
+        node->setLeft(remove_wrapped(node->getLeftChild(), data));
+    }
+    else if (data > node -> getData()){
+        node->setRight(remove_wrapped(node->getRightChild(), data));
+    }
+    else { // data == node->getData()
+        if ((node->getLeftChild() == NULL) && (node->getRightChild() == NULL)){
+            delete node;
+            node = NULL;
+        }
+        else if ((node->getLeftChild() == NULL) || (node->getRightChild() == NULL)){
+            Node* temp = node->getLeftChild() ? node->getLeftChild() : node->getRightChild();
+            *node = *temp;
+            delete temp;
+        }
+        else { // there are 2 children
+            Node* temp = maxValueNode(node->getLeftChild());
+            node->setData(temp->getData());
+            // Delete the inorder successor
+            node->setLeft(remove_wrapped(node->getLeftChild(), temp->getData()));
+        }
+
+        if (!node){
+            return node;
+        }
+    }
+
+    node->setHeight(0);
+    //get balance factor
+    int balance = getBalance(node);
+    //if balance indicates unbalance, then rotate
+    //left left case
+    if(balance > 1 && getBalance(node->getLeftChild()) >= 0){
+        node = AVLrightRotate(node);
+    }
+    //right right case
+    if(balance < -1 && getBalance(node->getRightChild()) <= 0){
+        node = AVLleftRotate(node);
+    }
+    //left right case
+    if(balance > 1 && getBalance(node->getLeftChild()) < 0){
+        node -> setLeft(AVLleftRotate(node->getLeftChild()));
+        node = AVLrightRotate(node);
+    }
+    //right left case
+    if(balance < -1 && getBalance(node->getRightChild()) > 0){
+        node -> setRight(AVLrightRotate(node->getRightChild()));
+        node = AVLleftRotate(node);
+    }
+
+    return node;
+}
+
+Node* AVL::maxValueNode(Node* cur){
+    Node* current = cur;
+
+    // find the leftmost leaf */
+    while (current->getRightChild() != NULL) {
+        current = current->getRightChild();
+    }
+
+    return current;
 }
 
 void AVL::replace_parent(Node*& removeNode, Node*& replacee) {
