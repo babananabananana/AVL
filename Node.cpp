@@ -5,13 +5,12 @@ Node::Node(void) {
     data = 0;
     left = nullptr;
     right = nullptr;
-    height = 0;
+    depth = 0;
 }
 
 Node::Node(int newData) {
     data = newData;
-    //TODO: set height on the new node
-    height = height;
+    depth = 1;
     left = nullptr;
     right = nullptr;
 }
@@ -25,16 +24,17 @@ int Node::getData() const {
 }
 
 Node *Node::getLeftChild() const {
-
-    return left;
+    if (left) return left;
+    else return nullptr;
 }
 
 Node *Node::getRightChild() const {
-    return right;
+    if (right) return right;
+    else return nullptr;
 }
 
 int Node::getHeight() {
-    return height;
+    return depth;
 }
 
 void Node::setRight(Node *right) {
@@ -50,6 +50,17 @@ void Node::setData(int data) {
 }
 
 void Node::setHeight(int height) {
-    Node::height = height;
+    if(!this->getLeftChild() && !this->getRightChild()){
+        depth = 1;
+    }
+    else if (!left){
+        depth = right->getHeight() + 1;
+    }
+    else if (!right){
+        depth = left->getHeight() + 1;
+    }
+    else{
+        depth = max(right->getHeight(), left->getHeight()) + 1;
+    }
 }
 

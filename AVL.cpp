@@ -8,37 +8,57 @@ NodeInterface *AVL::getRootNode() const {
     return local_root;
 }
 
+int max(int a, int b) {
+    return (a > b) ? a : b;
+}
 bool AVL::add(int data) { // Add copied from BST lab :)
 	if (local_root == nullptr) {
 		local_root = new Node(data);
 		return true;
 	}
 	Node* cur = local_root;
-	return add_wrapped(cur, data);
+    local_root = add_wrapped(cur, data);
+    return true;
 }
-bool AVL::add_wrapped(Node* cur, int data) {
-	if (cur == nullptr) {
-		cur = new Node(data);
-		return true;
+
+Node* AVL::add_wrapped(Node* node, int data) {
+	if (node == nullptr) {
+        return (new Node(data));
 	}
-	else if (cur->getData() == data) {
-		return false;
+	else if (data < node->getData()) {
+	    node->setLeft(add_wrapped(node->getLeftChild(), data));
+	    node->setHeight(max(1 + node->getLeftChild()->getHeight(), node->getHeight()));
 	}
-	else if (cur->getData() < data) {
-		if (cur->getRightChild() == nullptr) {
-			cur->setRight(new Node(data));
-			return true;
-		}
-		else return add_wrapped(cur->getRightChild(), data);
+	else if (data > node->getData()) {
+        node->setRight(add_wrapped(node->getRightChild(), data));
+        node->setHeight(max(1 + node->getRightChild()->getHeight(), node->getHeight()));
 	}
-	else if (cur->getData() > data) {
-		if (cur->getLeftChild() == nullptr) {
-			cur->setLeft(new Node(data));
-			return true;
-		}
-		else return add_wrapped(cur->getLeftChild(), data);
+	else { // data == node->getData()
+	    return node;
 	}
-	return false;
+
+    int balance = getBalance(node);
+    //if balance indicates unbalance, then rotate
+    //left left case
+    if(balance > 1 && data < node->getLeftChild()->getData()){
+        return AVLrightRotate(node);
+    }
+    //right right case
+    if(balance < -1 && data > node->getRightChild()->getData()){
+        return AVLleftRotate(node);
+    }
+    //left right case
+    if(balance > 1 && data > node -> getLeftChild() -> getData()){
+        node -> setLeft(AVLleftRotate(node->getLeftChild()));
+        return AVLrightRotate(node);
+    }
+    //right left case
+    if(balance < -1 && data < node -> getRightChild() -> getData()){
+        node -> setRight(AVLrightRotate(node->getRightChild()));
+        return AVLleftRotate(node);
+    }
+
+	return node;
 }
 
 bool AVL::remove(int data) {
@@ -46,48 +66,49 @@ bool AVL::remove(int data) {
 		return false;
 	}
 	else {
-		return remove_wrapped(local_root, data);
+        Node* toRemove = local_root;
+		return remove_wrapped(toRemove, data);
 	}
 }
 
-bool AVL::remove_wrapped(Node* &local_root, int toRemove) {
-    if (local_root == nullptr) {
+bool AVL::remove_wrapped(Node* &toRemoveNode, int toRemoveData) {
+    if (toRemoveNode == nullptr) {
 		return false;
 	}
 	else {
-		if (toRemove < local_root->getData()) {
-		    local_root = local_root->getLeftChild();
-			return remove_wrapped(local_root, toRemove);
+		if (toRemoveData < toRemoveNode->getData()) {
+            toRemoveNode = toRemoveNode->getLeftChild();
+			return remove_wrapped(toRemoveNode, toRemoveData);
 		}
-		else if (toRemove > local_root->getData()) {
-		    local_root = local_root->getRightChild();
-			return remove_wrapped(local_root, toRemove);
+		else if (toRemoveData > toRemoveNode->getData()) {
+            toRemoveNode = toRemoveNode->getRightChild();
+			return remove_wrapped(toRemoveNode, toRemoveData);
 		}
 		else { // If toRemove is found
-			Node* old_root = local_root;
-			if (local_root->getLeftChild() == nullptr) {
-				local_root = local_root->getLeftChild();
+			Node* removeNodeCopy = toRemoveNode;
+			if (toRemoveNode->getLeftChild() == nullptr) {
+                toRemoveNode = toRemoveNode->getLeftChild();
 			}
 			else {
-			    Node* temp = old_root->getLeftChild();
-				replace_parent(old_root, temp);
+			    Node* replacee = removeNodeCopy->getLeftChild();
+				replace_parent(removeNodeCopy, replacee);
 			}
-//			delete old_root;
+//			delete removeNodeCopy;
 			return true;
 		}
 	}
 return false;
 }
 
-void AVL::replace_parent(Node*& old_root, Node*& local_root) {
-	if (local_root->getRightChild() != nullptr) {
-	    local_root = local_root -> getRightChild();
-		replace_parent(old_root, local_root);
+void AVL::replace_parent(Node*& removeNode, Node*& replacee) {
+	if (replacee->getRightChild() != nullptr) {
+        replacee = replacee -> getRightChild();
+		replace_parent(removeNode, replacee);
 	}
 	else {
-		old_root->setData(local_root->getData());
-		old_root = local_root;
-		local_root = local_root->getLeftChild();
+		removeNode->setData(replacee->getData());
+        removeNode = replacee;
+        replacee = replacee->getLeftChild();
 	}
 }
 void AVL::clear() {
@@ -115,20 +136,46 @@ return;
 //}
 
 Node* AVL::AVLrightRotate(Node* y) {
-	Node* x = y->getLeftChild();
-	Node* T2 = x->getRightChild();
-	//Finish me
-	//updated heights
+    Node *x = y->getLeftChild();
+    Node *T2 = x->getRightChild();
 
-	return nullptr;
+    //perform rotation
+    x->setRight(y);
+    y->setLeft(T2);
+    y->setHeight(0);
+    x->setHeight(0);
+
+    //return new root
+    return x;
 }
 
 Node *AVL::AVLleftRotate(Node *x) {
-    return nullptr;
+    Node *y = x->getRightChild();
+    Node *T2 = y->getLeftChild();
+
+    //perform rotation
+    y->setLeft(x);
+    x->setRight(T2);
+
+    x->setHeight(0);
+    y->setHeight(0);
+
+    //return new root
+    return y;
 }
 
 int AVL::getBalance(Node *N) {
-    return 0;
+    if (N == NULL)
+        return 0;
+    int rightHeight = 0;
+    int leftHeight = 0;
+    if(N->getLeftChild()){
+        leftHeight = N->getLeftChild()->getHeight();
+    }
+    if(N->getRightChild()){
+        rightHeight = N->getRightChild()->getHeight();
+    }
+    return (leftHeight - rightHeight);
 }
 
 Node *AVL::insert(Node node, int key) {

@@ -29,7 +29,7 @@ public:
     */
     bool add(int data);
 
-	bool add_wrapped(Node* cur, int data);
+	Node* add_wrapped(Node* node, int data);
     /*
     * Attempts to remove the given int from the AVL tree
     * Rebalances the tree if data is successfully removed
@@ -39,7 +39,7 @@ public:
     */
     bool remove(int data);
 
-	bool remove_wrapped(Node* &newRoot, int toRemove);
+	bool remove_wrapped(Node* &toRemoveNode, int toRemoveData);
     /*
     * Removes all nodes from the tree, resulting in an empty tree.
     */
@@ -51,11 +51,10 @@ public:
 	Node* AVLleftRotate(Node* x);
 	int getBalance(Node* N);
 	Node* insert(Node node, int key);
-	void replace_parent(Node*& old_root, Node*& local_root);
+	void replace_parent(Node*& removeNode, Node*& replacee);
 
 private:
 	Node* local_root;
-
 };
 
 

@@ -32,14 +32,14 @@ public:
 	virtual NodeInterface * getRightChild() const = 0;
 
 	/*
-	* Returns the height of this node. The height is the number of nodes
+	* Returns the depth of this node. The depth is the number of nodes
 	* along the longest path from this node to a leaf.  While a conventional
 	* interface only gives information on the functionality of a class and does
 	* not comment on how a class should be implemented, this function has been
 	* provided to point you in the right direction for your solution.  For an
-	* example on height, see page 448 of the text book.
+	* example on depth, see page 448 of the text book.
 	*
-	* @return the height of this tree with this node as the local root.
+	* @return the depth of this tree with this node as the local root.
 	*/
 	virtual int getHeight() = 0;
 };
